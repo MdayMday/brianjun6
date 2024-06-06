@@ -21,7 +21,6 @@ global prevCheck
 prevCheck = 1
 start = time.time
 global allPlay
-global numOfPlayers
 numOfPlayers = 1 #create variable with value for sake "if" statements
 class player:
     def __init__(self, name, hand):
@@ -72,6 +71,10 @@ def rotation_p():
     up = 0
 
     dealHand()
+    pygame.display.flip()
+    imp = pygame.image.load(f"{path}/table{bounceon3()}.png").convert()
+    imp = pygame.transform.scale(imp, (1680, 1050))
+    scrn.blit(imp, (0, 0) ) 
     allAt = allPlay[:]
     while y == True :
         turn = 0
@@ -230,8 +233,7 @@ def rotation_p():
 def main():
     global allPlay 
     global numPlay
-    global numOfPlayers
-    numPlay = numOfPlayers
+    numPlay = selectPlayers()
     print(f"numplay{numPlay}")
     if (numPlay == 1):
         allPlay = [P1,Cpu1,Cpu2,Cpu3]
@@ -296,7 +298,6 @@ def selectPlayers():
                     playerSelectLoop = False
                 if event.key == pygame.K_ESCAPE: 
                     imp = pygame.image.load(f"calling image path that cant exits so the code errors and ends the program which is what i wanted anyway.png").convert()
-            print(numOfPlayers)
     return(numOfPlayers)
 
 def rules():
@@ -353,9 +354,10 @@ def gamelogic():
                     if event.key == pygame.K_ESCAPE:
                         gameDisplay = False
 def menu():
-    mixer.music.load(f"{path}/theme.mp3")
+    #starts music. commented out for now because its still plays the soviet anthem
+    '''mixer.music.load(f"{path}/theme.mp3") 
     mixer.music.set_volume(1) 
-    mixer.music.play()
+    mixer.music.play()'''
     menuLoop = True
     while menuLoop == True:
         pygame.display.flip()
@@ -371,7 +373,6 @@ def menu():
                     rules()
                     print("rules")
                 if event.key == pygame.K_KP_ENTER:
-                    selectPlayers()
                     main()
                     rotation_p()
                     gamelogic()#not sure ab this yet
@@ -384,5 +385,3 @@ def menu():
         
     
 menu()
-
-print(f"number of players = {numOfPlayers}")
