@@ -1,0 +1,163 @@
+from pygame import mixer 
+import pygame
+import os
+import sys
+import random
+
+path1 = os.path.basename(__file__)
+path= os.path.dirname(__file__)
+import time
+print(path)
+x = 0
+pygame.init()
+X = 1680
+Y = 1050
+pygame.display.set_caption('image')
+scrn = pygame.display.set_mode((X, Y), pygame.FULLSCREEN)
+pygame.display.flip()
+global bounce3
+bounce3 = "A"
+global prevCheck
+prevCheck = 1
+start = time.time
+global numOfPlayers
+numOfPlayers = 1 #create variable with value for sake "if" statements
+def bounceon2(): #function to be used for animation 
+    check = time.time()
+    check = int(check)
+    #print(check)
+    if (check % 2 == 0): #b on even, a on odd to change once a second
+        return("B")
+    else:
+        return("A")
+def bounceon3(): # function to be used for animation 
+    global bounce3 
+    global prevCheck #variables cant be declared here becuase they need a value but if called here they would reset every time making the function usless 
+    check = time.time()
+    check = int(check)
+    if (check != prevCheck):  #check if the second has changed
+        if (bounce3 == "A"):#cycle through abc
+            bounce3 = "B"
+            prevCheck = check
+            return("B")
+        elif (bounce3 == "B"):
+            bounce3 = "C"
+            prevCheck = check
+            return("C")
+        elif (bounce3 == "C") :
+            bounce3 = "A"
+            prevCheck = check
+            return("A")
+        else:
+            return("error") #i dont know why this is here, it cant happen
+    else :
+        return(bounce3) #if the timers not different then it skips to here and passes the last value through without changing it 
+def selectPlayers():
+    global numOfPlayers
+    playerSelectLoop = True
+    while playerSelectLoop == True:
+        pygame.display.flip()
+        imp = pygame.image.load(f"{path}/playerselect{numOfPlayers}{bounceon2()}.png").convert()
+        imp = pygame.transform.scale(imp, (1680, 1050))
+        scrn.blit(imp, (0, 0) )
+        for event in pygame.event.get(): #keydown event dectect 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    if (numOfPlayers < 4): #cap player variable at 4
+                        numOfPlayers = numOfPlayers +1
+                    else:
+                        pass
+                if event.key == pygame.K_UP:
+                    if (numOfPlayers > 1): # stop players from being less than one
+                        numOfPlayers = numOfPlayers -1
+                if event.key == pygame.K_KP_ENTER:
+                    playerSelectLoop = False
+                if event.key == pygame.K_ESCAPE: 
+                    imp = pygame.image.load(f"calling image path that cant exits so the code errors and ends the program which is what i wanted anyway.png").convert()
+            print(numOfPlayers)
+    return(numOfPlayers)
+
+def rules():
+    rulesDisplay = True
+    while rulesDisplay == True:
+        pygame.display.flip()
+        imp = pygame.image.load(f"{path}/rules{bounceon2()}.png").convert()
+        imp = pygame.transform.scale(imp, (1680, 1050))
+        scrn.blit(imp, (0, 0) ) 
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP_ENTER:
+                    rulesDisplay = False
+def credits():
+    creditsDisplay = True
+    while creditsDisplay == True:
+        pygame.display.flip()
+        imp = pygame.image.load(f"{path}/credits{bounceon2()}.png").convert()
+        imp = pygame.transform.scale(imp, (1680, 1050))
+        scrn.blit(imp, (0, 0) ) 
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP_ENTER:
+                    creditsDisplay = False
+                if event.key == pygame.K_KP_PLUS:
+                    print("swedish verions still in development\nplease try again later")
+
+def leaderboard():
+    leaderboardDisplay = True
+    while leaderboardDisplay == True:
+        pygame.display.flip()
+        imp = pygame.image.load(f"{path}/credits{bounceon2()}.png").convert()
+        imp = pygame.transform.scale(imp, (1680, 1050))
+        scrn.blit(imp, (0, 0) ) 
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP_ENTER:
+                    leaderboardDisplay = False
+def gamelogic():
+    gameDisplay = True
+    while gameDisplay == True:
+        pygame.display.flip()
+        imp = pygame.image.load(f"{path}/table{bounceon3()}.png").convert()
+        imp = pygame.transform.scale(imp, (1680, 1050))
+        scrn.blit(imp, (0, 0) ) 
+        for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_KP_ENTER:
+                        pygame.display.flip()
+                        imp = pygame.image.load(f"{path}/cards/gurkacard2.png").convert()
+                        imp = pygame.transform.scale(imp, (1680, 1050))
+                        scrn.blit(imp, (0, 0) ) 
+                        time.sleep(1)
+                    if event.key == pygame.K_ESCAPE:
+                        gameDisplay = False
+def menu():
+    mixer.music.load(f"{path}/theme.mp3")
+    mixer.music.set_volume(1) 
+    mixer.music.play()
+    menuLoop = True
+    while menuLoop == True:
+        pygame.display.flip()
+        imp = pygame.image.load(f"{path}/menu{bounceon3()}.png").convert()
+        imp = pygame.transform.scale(imp, (1680, 1050))
+        scrn.blit(imp, (0, 0) ) 
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP1:
+                    #leaderboard
+                    print("leaderboard")
+                if event.key == pygame.K_KP2:
+                    rules()
+                    print("rules")
+                if event.key == pygame.K_KP_ENTER:
+                    selectPlayers()
+                    gamelogic()
+                if event.key == pygame.K_KP3:
+                    credits()
+                    print("credits")
+                if event.key == pygame.K_ESCAPE: 
+                    imp = pygame.image.load(f"calling image path that cant exist so the code errors and ends the program which is what i wanted anyway.png").convert()
+        
+    
+menu()
+
+print(f"number of players = {numOfPlayers}")
